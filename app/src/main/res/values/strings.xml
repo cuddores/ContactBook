@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">ContactBook</string>
+    <string name="phoneNumber">+79001234567</string>
+    <string name="EmailSubject">Обращение</string>
+    <string name="EmailAddress">support@example.com</string>
+    <string name="EmailBody">Добрый день,</string>
+    <string name="MapLabel">Наш офис</string>
+    <string name="ShareButtonText">Контакт: +7 (495) 123-45-67, contact@example.com</string>
+    <string name="CallBtnText">Позвонить</string>
+    <string name="CreateEmail">Написать email</string>
+    <string name="ShowOnMap">Показать на карте</string>
+    <string name="ShareVia">Поделиться через...</string>
+    <string name="ShareContact">Поделиться контактом</string>
+    <string name="ExeptionMessage">Нет подходящего приложения</string>
 </resources>

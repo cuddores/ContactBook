@@ -1,7 +1,9 @@
 package com.example.contactbook
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,7 +26,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             ContactBookTheme {
                 Scaffold(
@@ -38,25 +40,25 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        CallButton("+79001234567")
+                        CallButton(stringResource(R.string.phoneNumber))
                         Spacer(modifier = Modifier.height(20.dp))
 
                         EmailButton(
-                            address = "support@example.com",
-                            subject = "Обращение",
-                            body = "Добрый день,"
+                            address = stringResource(R.string.EmailAddress),
+                            subject = stringResource(R.string.EmailSubject),
+                            body = stringResource(R.string.EmailBody)
                         )
                         Spacer(modifier = Modifier.height(20.dp))
 
                         MapButton(
                             latitude = 60.0237,
                             longitude = 30.2289,
-                            label = "Наш офис"
+                            label = stringResource(R.string.MapLabel)
                         )
                         Spacer(modifier = Modifier.height(20.dp))
 
                         ShareButton(
-                            text = "Контакт: +7 (495) 123-45-67, contact@example.com"
+                            text = stringResource(R.string.ShareButtonText)
                         )
                     }
                 }
@@ -70,7 +72,7 @@ fun CallButton(phoneNumber: String) {
     val context = LocalContext.current
     Button(onClick = {
         val intent = Intent(Intent.ACTION_DIAL, "tel:$phoneNumber".toUri())
-        context.startActivity(intent)
+        startIntent(context, intent)
     },
         modifier = Modifier
             .width(250.dp)
@@ -81,12 +83,11 @@ fun CallButton(phoneNumber: String) {
         )
     ) {
         Text(
-            "Позвонить",
+            stringResource(R.string.CallBtnText),
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium
         )
     }
-
 }
 
 @Composable
@@ -101,7 +102,7 @@ fun EmailButton(address: String, subject: String, body: String) {
                 putExtra(Intent.EXTRA_SUBJECT, subject)
                 putExtra(Intent.EXTRA_TEXT, body)
             }
-            context.startActivity(intent)
+            startIntent(context, intent)
         },
         modifier = Modifier
             .width(250.dp)
@@ -111,7 +112,8 @@ fun EmailButton(address: String, subject: String, body: String) {
             contentColor = Color.White
         )
     ) {
-        Text("Написать email",
+        Text(
+            stringResource(R.string.CreateEmail),
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium
         )
@@ -127,18 +129,18 @@ fun MapButton(latitude: Double, longitude: Double, label: String) {
         onClick = {
             val geoUri = "geo:0,0?q=$latitude,$longitude($label)".toUri()
             val intent = Intent(Intent.ACTION_VIEW, geoUri)
-            context.startActivity(intent)
+            startIntent(context, intent)
         },
         modifier = Modifier
             .width(250.dp)
             .height(55.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF6A5ACD), // Можно заменить на нужный
+            containerColor = Color(0xFF6A5ACD), 
             contentColor = Color.White
         )
     ) {
         Text(
-            "Показать на карте",
+            stringResource(R.string.ShowOnMap),
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium
         )
@@ -155,24 +157,34 @@ fun ShareButton(text: String) {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, text)
             }
-            val chooser = Intent.createChooser(sendIntent, "Поделиться через...")
-            context.startActivity(chooser)
-        },
+            val chooser = Intent.createChooser(sendIntent, context.getString(R.string.ShareVia))
+            startIntent(context, chooser)
+                    },
         modifier = Modifier
             .width(250.dp)
             .height(55.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF6A5ACD), // Можно заменить на нужный
+            containerColor = Color(0xFF6A5ACD),
             contentColor = Color.White
         )
     ) {
         Text(
-            "Поделиться контактом",
+            stringResource(R.string.ShareContact),
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+    }
+}
+
+private fun startIntent(context: Context, intent: Intent) {
+
+    if (intent.resolveActivity(context.packageManager) != null)
+        context.startActivity(intent)
+    else
+    {
+        Toast.makeText(context, context.getString(R.string.ExeptionMessage), Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -185,25 +197,25 @@ fun PreviewScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CallButton("+79001234567")
+            CallButton(stringResource(R.string.phoneNumber))
             Spacer(modifier = Modifier.height(20.dp))
 
             EmailButton(
-                address = "support@example.com",
-                subject = "Обращение",
-                body = "Добрый день,"
+                address = stringResource(R.string.EmailAddress),
+                subject = stringResource(R.string.EmailSubject),
+                body = stringResource(R.string.EmailBody)
             )
             Spacer(modifier = Modifier.height(20.dp))
 
             MapButton(
                 latitude = 60.0237,
                 longitude = 30.2289,
-                label = "Наш офис"
+                label = stringResource(R.string.MapLabel)
             )
             Spacer(modifier = Modifier.height(20.dp))
 
             ShareButton(
-                text = "Контакт: +7 (495) 123-45-67, contact@example.com"
+                text = stringResource(R.string.ShareButtonText)
             )
         }
     }
